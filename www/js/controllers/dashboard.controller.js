@@ -20,7 +20,7 @@ app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$loca
 
     }
 
-
+ $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
     if (!User.islogged) {
         $location.path('/login');
     } else {
@@ -31,7 +31,7 @@ app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$loca
         }, 2000);
     }
 
-
+ });
 
 
 
