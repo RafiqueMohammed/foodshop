@@ -1,0 +1,28 @@
+<ion-view view-title="{{order.fullname|uppercase}}'S ORDER">
+	<ion-content class="padding" style="background-color:#eee">
+        
+        <ion-list>
+            <ion-item ng-repeat="item in order.items">
+                <div class="row">
+                    <div class="col col-10 icon icon-outline" style="text-align:center;border:#eee 1px solid">{{item.qty}}</div>
+                    <div class="col col-80">{{item.itemname}}
+                       <p>{{item.comment}}</p>
+                    </div>
+                    <div class="col col-10">${{item.amount}}</div>
+                </div>
+               <!-- <div class="badge assertive">${{item.amount}}</div>
+                <h2>{{item.itemname}}</h2>
+                <p> {{item.qty}}</p>-->
+                
+            </ion-item>
+        </ion-list>
+<div class="padding-vertical">
+<div class="row">
+    <div class="col col-50"> <button class="button button-positive button-block" ng-click="confirmOrder()">ACCEPT</button></div>
+    <div class="col col-50"> <button class="button button-assertive  button-block" ng-click="confirmReject()">REJECT</button></div>
+</div>
+       
+        
+    </div>
+	</ion-content>
+</ion-view>

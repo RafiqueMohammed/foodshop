@@ -1,0 +1,24 @@
+<ion-view view-title="DASHBOARD">
+	<ion-content class="padding-horizontal" style="background-color:#eee">
+
+		<div class="card" ng-repeat="order in orders.list" ng-click="orders.viewOrder(order.order_id)">
+
+			<div class="item">
+				<div class="row">
+                    <div class="col col-80 item-text-wrap">
+					<h2>{{order.fullname}}</h2>
+					<p class="royal">{{order.items[0].itemname}}<span ng-if="order.items.length>1"> + {{order.items.length-1}} items</span></p>
+				</div>
+				<div class="col col-20 assertive" style="font-size:1.2em">
+					${{order.total_amount}}
+				</div>
+                </div>
+                <div class="row">
+					<!--<p class="badge  badge-assertive" style="position :relative;right:0;top:0">{{order.status|lowercase}}</p>-->
+					<p class="subdued "><i class="icon ion-arrow-right-c assertive"></i> {{order.status|uppercase}}</p></div>
+			</div>
+            
+		</div>
+
+	</ion-content>
+</ion-view>
