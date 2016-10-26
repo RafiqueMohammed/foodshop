@@ -4,8 +4,8 @@
         <ion-list>
             <ion-item ng-repeat="item in order.items">
                 <div class="row">
-                    <div class="col col-10 icon icon-outline" style="text-align:center;border:#eee 1px solid">{{item.qty}}</div>
-                    <div class="col col-80">{{item.itemname}}
+                    <div class="col col-20" style=""><span class="padding" style="border:#eee 1px solid">22{{item.qty}}</span></div>
+                    <div class="col col-70">{{item.itemname}}
                        <p>{{item.comment}}</p>
                     </div>
                     <div class="col col-10">${{item.amount}}</div>

@@ -1,0 +1,24 @@
+<ion-view hide-nav-bar="true" class=" login_bg">
+<div style="text-align:center"><img src="img/logo.png" width="80vh" style="margin:0 auto;" />
+<h2 class="positive">LOGIN</h2>
+</div>
+	<div class="middle-port padding">
+		<div class="card">
+			<ion-list>
+				<label class="item item-input" >
+					<i class="icon ion-android-mail placeholder-icon"></i>
+    <input type="text" ng-model="user.email" placeholder="Email ID">
+  </label>
+				<label class="item item-input">
+					<i class="icon ion-key placeholder-icon"></i>
+    <input type="password" ng-model="user.password" placeholder="Password">
+  </label>
+
+			</ion-list>
+
+		</div>
+		<p class="dark padding-vertical">FORGOT PASSWORD?</p>
+		<button class="button button-positive button-block" ng-click="login()">LOGIN</button>
+	</div>
+
+</ion-view>
