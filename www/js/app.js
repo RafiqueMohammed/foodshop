@@ -64,6 +64,11 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
       templateUrl: 'templates/orders/view_order.html',
       controller: 'orderCtrl'
 
+    }).state('order_details', {
+      url: '/dashboard/order_details/:order_id',
+      templateUrl: 'templates/orders/order_details.html',
+      controller: 'orderCtrl'
+
     })
     .state('login', {
       url: '/login',
@@ -71,6 +76,8 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
       controller: 'loginCtrl'
 
     });
+
+    
 
 $urlRouterProvider.otherwise('/dashboard');
 

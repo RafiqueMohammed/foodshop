@@ -1,0 +1,35 @@
+<ion-view view-title="ORDER STATUS">
+	<ion-content class="padding" style="background-color:#eee">
+
+
+		<div class="card padding">
+			<h3 class="assertive">{{order.fullname}}</h3>
+			<p>{{order.address}}</p>
+<ul class="dark">
+    <li ng-repeat="item in order.items"><i class="icon ion-android-done"></i> {{item.itemname}}</li>
+</ul>
+		</div>
+
+    <div class="row">
+			<div class="col col-25 item-avatar" style="position:relative">
+					<img src="img/order/confirmed.png" alt="confirm order">
+<span class="line"></span>
+			</div>
+			<div class="col col-25 item-avatar" style="position:relative">
+			<img src="img/order/inprocess.png" alt="confirm order">
+            <span class="line"></span>
+			</div>
+			<div class="col col-25 item-avatar" style="position:relative">
+				<img src="img/order/out_for_delivery.png" alt="confirm order">
+                <span class="line"></span>
+			</div>
+			<div class="col col-25 item-avatar" style="position:relative">
+				<img src="img/order/delivered.png" alt="confirm order">
+			</div>
+		</div>
+
+	<div class="padding">
+			<button class="button button-royal button-block"><i class="icon ion-android-done-all"></i> SET AND SEND NOTIFICATION</button>
+		</div>
+	</ion-content>
+</ion-view>

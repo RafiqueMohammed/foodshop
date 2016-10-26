@@ -11,8 +11,13 @@ app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$loca
     };
     $scope.orders = {};
     $scope.orders.list = [];
-    $scope.orders.viewOrder = function (order_id) {
-        $location.path('/dashboard/viewOrder/' + order_id);
+    $scope.orders.viewOrder = function (order) {
+        if (order.status == 'waiting') {
+            $location.path('/dashboard/viewOrder/' + order.order_id);
+        } else {
+            $location.path('/dashboard/order_details/' + order.order_id);
+        }
+
     }
 
 
@@ -58,7 +63,12 @@ app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location
         }).then(function (modal) {
             $scope.selectTime = modal;
         });
+        var setReadyTime = function (min) {
+            $ionicPopup.alert({ template: "Marked as " + min + " minutes." }).then(function () {
+                $location.path("/dashboard/order_details/" + $stateParams.order_id);
+            });
 
+        };
         $scope.confirmOrder = function () {
             $ionicPopup.show({
                 title: 'ORDER READY IN',
@@ -68,35 +78,23 @@ app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location
                         text: '30 MINS',
                         type: 'button-stable',
                         onTap: function (e) {
-                            if (!$scope.data.wifi) {
-                                //don't allow the user to close unless he enters wifi password
-                                e.preventDefault();
-                            } else {
-                                return $scope.data.wifi;
-                            }
+                            setReadyTime("30");
+
                         }
                     },
                     {
                         text: '45 MINS',
                         type: 'button-stable',
                         onTap: function (e) {
-                            if (!$scope.data.wifi) {
-                                //don't allow the user to close unless he enters wifi password
-                                e.preventDefault();
-                            } else {
-                                return $scope.data.wifi;
-                            }
+                            setReadyTime("45");
+
                         }
                     }, {
                         text: '60 MINS',
                         type: 'button-stable',
                         onTap: function (e) {
-                            if (!$scope.data.wifi) {
-                                //don't allow the user to close unless he enters wifi password
-                                e.preventDefault();
-                            } else {
-                                return $scope.data.wifi;
-                            }
+                            setReadyTime("60");
+
                         }
                     }
                 ]
