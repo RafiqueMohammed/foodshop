@@ -13,3 +13,24 @@
   position: absolute;
   top: 0;
   height: 100%; }
+
+.login_bg {
+  background: url("../img/login_bg.png") no-repeat bottom center fixed;
+  background-color: #fefefe;
+  background-size: contain; }
+
+.text-lg{
+  font-size:1.6em;
+}
+.text-sm{
+  font-size:1.1em;
+}
+.middle-port{
+  width:90%;
+  text-align: center;
+  margin: 10% auto;
+  transform: translateY(-10%);
+}
+
+
+

@@ -1,12 +1,4 @@
 app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$location', function ($scope, $ionicLoading, APIService, $location) {
-
-
-    $scope.orders = {};
-    $scope.orders.list = [];
-    $scope.orders.viewOrder = function (order_id) {
-        $location.path('/dashboard/viewOrder/' + order_id);
-    }
-
     var showLoading = function (show) {
         if (show) {
             $ionicLoading.show({
@@ -17,21 +9,42 @@ app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$loca
         }
 
     };
+    $scope.orders = {};
+    $scope.orders.list = [];
+    $scope.orders.viewOrder = function (order_id) {
+        $location.path('/dashboard/viewOrder/' + order_id);
+    }
 
 
-    $scope.orders.list = APIService.getOrders();
-    /*showLoading(true);
-        setTimeout(function(){
+    if (!User.islogged) {
+        $location.path('/login');
+    } else {
+        showLoading(true);
+        setTimeout(function () {
             showLoading(false);
-            $scope.orders.list=APIService.getOrders();
-        },2000);*/
+            $scope.orders.list = APIService.getOrders();
+        }, 2000);
+    }
+
+
+
+
+
+
+
+    // $scope.orders.list = APIService.getOrders();
+
 }]);
 
 app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location', '$stateParams', '$ionicPopup', '$ionicModal',
     function ($scope, $ionicLoading, APIService, $location, $stateParams, $ionicPopup, $ionicModal) {
 
+
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = true;
+            if (!User.islogged) {
+                $location.path('/login');
+            }
         });
         $scope.order = {};
 
@@ -40,13 +53,13 @@ app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location
             console.log("confirm ", val);
         }
 
-        $ionicModal.fromTemplateUrl('templates/orders/time_modal.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
+        $ionicModal.fromTemplateUrl('templates/time-modal.html', {
+            scope: $scope
         }).then(function (modal) {
-            $scope.timeModal = modal;
+            $scope.selectTime = modal;
         });
-        $scope.confirmOrder1 = function () {
+
+        $scope.confirmOrder = function () {
             $ionicPopup.show({
                 title: 'ORDER READY IN',
                 scope: $scope,
@@ -90,11 +103,12 @@ app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location
             });
         };
 
-        $scope.confirmOrder = function () {
+        $scope.confirmOrder1 = function () {
 
-            $scope.timeModal.show();
+            $scope.selectTime.show();
 
         }
+
         $scope.confirmReject = function () {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'CANCEL ORDER',
@@ -103,7 +117,9 @@ app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location
 
             confirmPopup.then(function (res) {
                 if (res) {
-                    console.log('You are sure');
+                    $ionicPopup.alert({ template: 'Order has been cancelled' }).then(function () {
+                        $location.path('/dashboard');
+                    });
                 } else {
                     console.log('You are not sure');
                 }
@@ -121,7 +137,16 @@ app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location
             }
         });
 
+        var showLoading = function (show) {
+            if (show) {
+                $ionicLoading.show({
+                    template: 'Checking orders..'
+                });
+            } else {
+                $ionicLoading.hide();
+            }
 
+        };
         /*showLoading(true);
             setTimeout(function(){
                 showLoading(false);

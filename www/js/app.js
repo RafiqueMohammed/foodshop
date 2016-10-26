@@ -4,8 +4,10 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 var app = angular.module('starter', ['ionic']);
+var User = { fullname: "", email: "", islogged: false };
 
-app.run(['$ionicPlatform', '$rootScope', function ($ionicPlatform, $rootScope) {
+
+app.run(['$ionicPlatform', '$rootScope', 'Storage', function ($ionicPlatform, $rootScope, Storage) {
   $ionicPlatform.ready(function () {
     if (window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -21,6 +23,13 @@ app.run(['$ionicPlatform', '$rootScope', function ($ionicPlatform, $rootScope) {
       StatusBar.styleDefault();
     }
 
+    var _u = Storage.get(SESS_USER, true);
+    if (Object.keys(_u).length > 0) {
+      User = _u;
+    } else {
+      Storage.save(SESS_USER, User, true);
+    }
+
   });
 }])
 
@@ -34,30 +43,39 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
     })
     .state('base.dashboard', {
       url: '/dashboard',
-      views:{
-        'dashboard':{
-        templateUrl: 'templates/dashboard.html',
-        controller:'dashboardCtrl'
-      }
+      views: {
+        'dashboard': {
+          templateUrl: 'templates/dashboard.html',
+          controller: 'dashboardCtrl'
+        }
       }
     })
     .state('base.completed', {
       url: '/completed',
-      views:{
-        'completed':{
-        templateUrl: 'templates/completed_orders.html',
-        controller:'completedOrdersCtrl'
-      }
+      views: {
+        'completed': {
+          templateUrl: 'templates/completed_orders.html',
+          controller: 'completedOrdersCtrl'
+        }
       }
     })
     .state('vieworder', {
       url: '/dashboard/viewOrder/:order_id',
-        templateUrl: 'templates/orders/view_order.html',
-        controller:'orderCtrl'
-    
+      templateUrl: 'templates/orders/view_order.html',
+      controller: 'orderCtrl'
+
+    })
+    .state('login', {
+      url: '/login',
+      templateUrl: 'templates/login.html',
+      controller: 'loginCtrl'
+
     });
 
-  $urlRouterProvider.otherwise('/dashboard');
+$urlRouterProvider.otherwise('/dashboard');
+
+
+  
 
 }]);
 
