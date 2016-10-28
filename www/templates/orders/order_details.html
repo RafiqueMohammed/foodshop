@@ -1,34 +1,40 @@
 <ion-view view-title="ORDER STATUS">
 	<ion-content class="padding" style="background-color:#eee">
-
-
 		<div class="card padding">
 			<h3 class="assertive">{{order.fullname}}</h3>
 			<p>{{order.address}}</p>
-<ul class="dark">
-    <li ng-repeat="item in order.items"><i class="icon ion-android-done"></i> {{item.itemname}}</li>
-</ul>
+			<ul class="dark">
+				<li ng-repeat="item in order.items"><i class="icon ion-android-done"></i> {{item.itemname}}</li>
+			</ul>
 		</div>
+		<div class="row" ng-switch on="order.status">
 
-    <div class="row">
 			<div class="col col-25 item-avatar" style="position:relative">
-					<img src="img/order/confirmed.png" alt="confirm order">
-<span class="line"></span>
+				<img  src="img/order/confirmed.png" alt="In progress">
+				<span class="line"></span>
 			</div>
 			<div class="col col-25 item-avatar" style="position:relative">
-			<img src="img/order/inprocess.png" alt="confirm order">
-            <span class="line"></span>
+				<img  ng-switch-when="inprocess" src="img/order/cook_progress.png" alt="confirm order">
+				<img  ng-switch-when="waiting" src="img/order/cook_wait.png" alt="confirm order">
+				<img ng-switch-when="readyfordispatch" src="img/order/cooked.png" alt="confirm order">
+				<img ng-switch-when="delivered" src="img/order/cooked.png" alt="confirm order">
+				<span class="line"></span>
 			</div>
 			<div class="col col-25 item-avatar" style="position:relative">
-				<img src="img/order/out_for_delivery.png" alt="confirm order">
-                <span class="line"></span>
+				<img ng-switch-when="inprocess" src="img/order/out_of_delivery_wait.png" alt="confirm order">
+				<img ng-switch-when="waiting" src="img/order/out_of_delivery_wait.png" alt="confirm order">
+				<img ng-switch-when="readyfordispatch" src="img/order/out_of_delivery_progress.png" alt="confirm order">
+				<img ng-switch-when="delivered" src="img/order/out_for_delivery.png" alt="confirm order">
+				<span class="line"></span>
 			</div>
 			<div class="col col-25 item-avatar" style="position:relative">
-				<img src="img/order/delivered.png" alt="confirm order">
+				<img ng-switch-when="inprocess" src="img/order/delivery_wait.png" alt="confirm order">
+				<img ng-switch-when="waiting" src="img/order/delivery_wait.png" alt="confirm order">
+				<img ng-switch-when="readyfordispatch" src="img/order/delivery_wait.png" alt="confirm order">
+				<img ng-switch-when="delivered" src="img/order/delivered.png" alt="confirm order">
 			</div>
 		</div>
-
-	<div class="padding">
+		<div class="padding">
 			<button class="button button-royal button-block"><i class="icon ion-android-done-all"></i> SET AND SEND NOTIFICATION</button>
 		</div>
 	</ion-content>

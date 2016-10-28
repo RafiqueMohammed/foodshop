@@ -19,6 +19,15 @@ app.factory('Storage', function () {
                 data = JSON.stringify(data);
             }
             return localStorage.setItem(index, data);
+        },
+        remove: function (index,User) {
+
+            localStorage.removeItem(index);
+            User.islogged = false;
+            User.fullname = "";
+            User.email = '';
+            return true;
         }
+
     }
 });

@@ -1,6 +1,9 @@
-<ion-view view-title="DASHBOARD">
-	<ion-content class="padding-horizontal" style="background-color:#eee">
-
+<ion-view view-title="DASHBOARD" >
+	<ion-content class="padding-horizontal" style="background-color:#eee" overflow-scroll="true">
+		<ion-refresher
+				pulling-text="Pull to refresh..."
+				on-refresh="doRefresh()">
+		</ion-refresher>
 		<div class="card" ng-repeat="order in orders.list" ng-click="orders.viewOrder(order)">
 
 			<div class="item">
@@ -10,7 +13,7 @@
 					<p class="royal">{{order.items[0].itemname}}<span ng-if="order.items.length>1"> + {{order.items.length-1}} items</span></p>
 				</div>
 				<div class="col col-20 assertive" style="font-size:1.2em">
-					${{order.total_amount}}
+					{{order.total_amount}}
 				</div>
                 </div>
                 <div class="row">

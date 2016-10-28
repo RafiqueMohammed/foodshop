@@ -1,4 +1,8 @@
-app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$location', function ($scope, $ionicLoading, APIService, $location) {
+app.controller('dashboardCtrl', ['$scope', '$rootScope', '$ionicLoading', 'APIService', '$location','Storage', '$state','$ionicActionSheet','$timeout', function ($scope, $rootScope, $ionicLoading, APIService, $location,Storage, $state,$ionicActionSheet, $timeout) {
+
+    $scope.user = {};
+    $scope.user = Storage.get(SESS_USER,true);
+    User = Storage.get(SESS_USER,true);
     var showLoading = function (show) {
         if (show) {
             $ionicLoading.show({
@@ -7,6 +11,34 @@ app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$loca
         } else {
             $ionicLoading.hide();
         }
+
+    };
+
+    $rootScope.showLogout = function() {
+
+        // Show the action sheet
+        var hideSheet = $ionicActionSheet.show({
+            buttons: [
+                { text: 'Logout' },
+            ],
+            cancelText: 'Cancel',
+            cancel: function() {
+                // add cancel code..
+            },
+            buttonClicked: function(index) {
+                USER = Storage.remove(SESS_USER,User);
+                /*User.islogged = false;
+                User.fullname = "";
+                User.email = '';*/
+                $state.go('login');
+                return true;
+            }
+        });
+
+        // For example's sake, hide the sheet after two seconds
+        $timeout(function() {
+            hideSheet();
+        }, 2000);
 
     };
     $scope.orders = {};
@@ -18,6 +50,15 @@ app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$loca
             $location.path('/dashboard/order_details/' + order.order_id);
         }
 
+    }
+
+    $rootScope.doRefresh = function () {
+        showLoading(true);
+        setTimeout(function () {
+            showLoading(false);
+            $scope.orders.list = APIService.getOrders();
+            $scope.$broadcast('scroll.refreshComplete');
+        }, 2000);
     }
 
  $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
@@ -41,10 +82,10 @@ app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$loca
 
 }]);
 
-app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location', '$stateParams', '$ionicPopup', '$ionicModal',
-    function ($scope, $ionicLoading, APIService, $location, $stateParams, $ionicPopup, $ionicModal) {
+app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location', '$stateParams', '$ionicPopup', '$ionicModal','$ionicActionSheet','Storage',
+    function ($scope, $ionicLoading, APIService, $location, $stateParams, $ionicPopup, $ionicModal,$ionicActionSheet,Storage) {
 
-
+        User = Storage.get(SESS_USER,true);
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = true;
             if (!User.islogged) {
