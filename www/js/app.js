@@ -50,6 +50,15 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         }
       }
     })
+    /*.state('base.dashboard', {
+        url: '/dashboard',
+        views: {
+          'dashboard': {
+            templateUrl: 'templates/dashboard.html',
+            controller: 'dashboardCtrl'
+          }
+        }
+      })*/
     .state('base.completed', {
       url: '/completed',
       views: {

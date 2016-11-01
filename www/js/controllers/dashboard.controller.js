@@ -1,4 +1,8 @@
-app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$location', function ($scope, $ionicLoading, APIService, $location) {
+app.controller('dashboardCtrl', ['$scope', '$rootScope', '$ionicLoading', 'APIService', '$location','Storage', '$state','$ionicActionSheet','$timeout', function ($scope, $rootScope, $ionicLoading, APIService, $location,Storage, $state,$ionicActionSheet, $timeout) {
+
+    $scope.user = {};
+    $scope.user = Storage.get(SESS_USER,true);
+    User = Storage.get(SESS_USER,true);
     var showLoading = function (show) {
         if (show) {
             $ionicLoading.show({
@@ -7,6 +11,35 @@ app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$loca
         } else {
             $ionicLoading.hide();
         }
+
+    };
+
+    /**
+     * @Author Bhupendra
+     * @desc opens the actionsheet with logout and cancel button.Logout functionality handled inside it
+     */
+    $rootScope.showLogout = function() {
+
+        // Show the action sheet
+        var hideSheet = $ionicActionSheet.show({
+            buttons: [
+                { text: 'Logout' }, //label
+            ],
+            cancelText: 'Cancel',
+            cancel: function() {
+                // cancel functionality handled inside it
+            },
+            buttonClicked: function(index) {
+                USER = Storage.remove(SESS_USER,User);  //remove function of storage service called with key and user object
+                $state.go('login');   //redirected to login page
+                return true;
+            }
+        });
+
+        // hide the actionsheet after 5 seconds
+        $timeout(function() {
+            hideSheet();
+        }, 5000);
 
     };
     $scope.orders = {};
@@ -18,6 +51,20 @@ app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$loca
             $location.path('/dashboard/order_details/' + order.order_id);
         }
 
+    }
+    /**
+     * @Author Bhupendra
+     * @desc Refresher function, called when on pull to refresh ,it updates the orders    *
+     * @return {object} orders.list updated list
+     *
+     */
+    $rootScope.doRefresh = function () {
+        showLoading(true);
+        setTimeout(function () {
+            showLoading(false);
+            $scope.orders.list = APIService.getOrders();
+            $scope.$broadcast('scroll.refreshComplete');
+        }, 2000);
     }
 
  $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
@@ -41,10 +88,10 @@ app.controller('dashboardCtrl', ['$scope', '$ionicLoading', 'APIService', '$loca
 
 }]);
 
-app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location', '$stateParams', '$ionicPopup', '$ionicModal',
-    function ($scope, $ionicLoading, APIService, $location, $stateParams, $ionicPopup, $ionicModal) {
+app.controller('orderCtrl', ['$scope', '$ionicLoading', 'APIService', '$location', '$stateParams', '$ionicPopup', '$ionicModal','$ionicActionSheet','Storage',
+    function ($scope, $ionicLoading, APIService, $location, $stateParams, $ionicPopup, $ionicModal,$ionicActionSheet,Storage) {
 
-
+        User = Storage.get(SESS_USER,true);
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = true;
             if (!User.islogged) {

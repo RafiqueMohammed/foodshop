@@ -1,6 +1,7 @@
 app.controller('loginCtrl', ['$scope', '$ionicLoading', 'APIService', 'Storage', '$ionicPopup', '$location',
     function ($scope, $ionicLoading, APIService, Storage, $ionicPopup, $location) {
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+
             if (User.islogged) {
                 $location.path('/dashboard');
             }

@@ -14,7 +14,7 @@ app.factory('APIService', function () {
         ]
     });
     orders.push({
-        order_id: 3343, fullname: "Selva Kumar",address:"66, 5th Floor, Park Avenue, Seawoods, Nerul", status: "inprocess", total_amount: "895", items: [
+        order_id: 3343, fullname: "Selva Kumar",address:"66, 5th Floor, Park Avenue, Seawoods, Nerul", status: "readyfordispatch", total_amount: "895", items: [
             { itemname: "Large Pizza", amount: "250", qty: "1", comment: "cheeze toppings" },
             { itemname: "Chicken Tandoori", amount: "450", qty: "1", comment: "" },
             { itemname: "Coco cola", amount: "55", qty: "2", comment: "should be cold" },
@@ -28,7 +28,7 @@ app.factory('APIService', function () {
         ]
     });
     orders.push({
-        order_id: 53245, fullname: "Satish",address:"66, 5th Floor, Park Avenue, Seawoods, Nerul", status: "inprocess", total_amount: "895", items: [
+        order_id: 53245, fullname: "Satish",address:"66, 5th Floor, Park Avenue, Seawoods, Nerul", status: "delivered", total_amount: "895", items: [
             { itemname: "Large Pizza", amount: "250", qty: "1", comment: "cheeze toppings" },
             { itemname: "Chicken Tandoori", amount: "450", qty: "1", comment: "" },
             { itemname: "Coco cola", amount: "55", qty: "2", comment: "should be cold" },
