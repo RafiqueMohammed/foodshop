@@ -14,31 +14,32 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$ionicLoading', 'APISe
 
     };
 
+    /**
+     * @Author Bhupendra
+     * @desc opens the actionsheet with logout and cancel button.Logout functionality handled inside it
+     */
     $rootScope.showLogout = function() {
 
         // Show the action sheet
         var hideSheet = $ionicActionSheet.show({
             buttons: [
-                { text: 'Logout' },
+                { text: 'Logout' }, //label
             ],
             cancelText: 'Cancel',
             cancel: function() {
-                // add cancel code..
+                // cancel functionality handled inside it
             },
             buttonClicked: function(index) {
-                USER = Storage.remove(SESS_USER,User);
-                /*User.islogged = false;
-                User.fullname = "";
-                User.email = '';*/
-                $state.go('login');
+                USER = Storage.remove(SESS_USER,User);  //remove function of storage service called with key and user object
+                $state.go('login');   //redirected to login page
                 return true;
             }
         });
 
-        // For example's sake, hide the sheet after two seconds
+        // hide the actionsheet after 5 seconds
         $timeout(function() {
             hideSheet();
-        }, 2000);
+        }, 5000);
 
     };
     $scope.orders = {};
@@ -51,7 +52,12 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$ionicLoading', 'APISe
         }
 
     }
-
+    /**
+     * @Author Bhupendra
+     * @desc Refresher function, called when on pull to refresh ,it updates the orders    *
+     * @return {object} orders.list updated list
+     *
+     */
     $rootScope.doRefresh = function () {
         showLoading(true);
         setTimeout(function () {

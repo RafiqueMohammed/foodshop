@@ -1,9 +1,11 @@
 <ion-view view-title="DASHBOARD" >
 	<ion-content class="padding-horizontal" style="background-color:#eee" overflow-scroll="true">
+		<!--Refresher added for pull to refresh event-->
 		<ion-refresher
 				pulling-text="Pull to refresh..."
 				on-refresh="doRefresh()">
 		</ion-refresher>
+		<!--End of pull to Refresher-->
 		<div class="card" ng-repeat="order in orders.list" ng-click="orders.viewOrder(order)">
 
 			<div class="item">
