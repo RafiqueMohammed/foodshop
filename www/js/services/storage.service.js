@@ -40,18 +40,13 @@ app.factory('Storage', function () {
         },
         /**
          * @Author Bhupendra
-         * @desc Destroys the session
-         * @param  {string} index : key of localstorage  set
-         * @param  {object} user object with email,name and islogged status
+         * @desc Remove data from Storage
+         * @param  {string} index : key of localstorage
          * @return  {boolean}
          */
-        remove: function (index,User) {
-
-            localStorage.removeItem(index);
-            User.islogged = false;
-            User.fullname = "";
-            User.email = '';
-            return true;
+        remove: function (index) {
+            return localStorage.removeItem(index);
+            
         }
 
     }

@@ -19,31 +19,39 @@
   background-color: #fefefe;
   background-size: contain; }
 
-.text-lg{
-  font-size:1.6em;
-}
-.text-sm{
-  font-size:1.1em;
-}
-.middle-port{
-  width:90%;
+.middle-port {
+  width: 90%;
   text-align: center;
   margin: 10% auto;
-  transform: translateY(-10%);
-}
+  transform: translateY(-10%); }
 
+.overflow-scroll > .scroll.overscroll {
+  position: fixed;
+  width: auto; }
 
-.line{
-    background: #999;
-    height: 5px;
-    width: 100%;
-    position: absolute;
-    margin: 0 auto;
-    top: 50%;
-    z-index: -1;
-    left: 50%;
-}
+.bar .title {
+  font-size: 16px !important; }
 
+.no-padding {
+  padding: 0px !important; }
 
+.padding-sm {
+  padding: 4px !important; }
 
+.padding-md {
+  padding: 8px !important; }
 
+.padding-lg {
+  padding: 16px !important; }
+
+.margin-sm {
+  margin: 4px !important; }
+
+.margin-md {
+  margin: 8px !important; }
+
+.margin-md10 {
+  margin: 10px !important; }
+
+.margin-lg {
+  margin: 16px !important; }

@@ -1,4 +1,4 @@
-<ion-view hide-nav-bar="true" class=" login_bg">
+<ion-view hide-nav-bar="true" class=" login_bg"  view-title="login">
 <div style="text-align:center"><img src="img/logo.png" width="80vh" style="margin:0 auto;" />
 <h2 class="positive">LOGIN</h2>
 </div>
@@ -6,8 +6,8 @@
 		<div class="card">
 			<ion-list>
 				<label class="item item-input" >
-					<i class="icon ion-android-mail placeholder-icon"></i>
-    <input type="text" ng-model="user.email" placeholder="Email ID">
+					<i class="icon ion-person placeholder-icon"></i>
+    <input type="text" ng-model="user.username" placeholder="Enter your username">
   </label>
 				<label class="item item-input">
 					<i class="icon ion-key placeholder-icon"></i>
@@ -17,7 +17,7 @@
 			</ion-list>
 
 		</div>
-		<p class="dark padding-vertical">FORGOT PASSWORD?</p>
+		<p ng-click="forgotPassword()" class="dark padding-vertical">FORGOT PASSWORD?</p>
 		<button class="button button-positive button-block" ng-click="login()">LOGIN</button>
 	</div>
 

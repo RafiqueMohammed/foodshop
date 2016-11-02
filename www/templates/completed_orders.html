@@ -1,16 +1,21 @@
 <ion-view view-title="COMPLETED ORDERS">
-	<ion-content class="padding-horizontal" style="background-color:#eee">
+	<ion-content class="no-padding" style="background-color:#eee" overflow-scroll="true">
+		<!--Refresher added for pull to refresh event-->
+		<ion-refresher
+				pulling-text="Pull to refresh..."
+				on-refresh="refreshCompletedList()">
+		</ion-refresher>
+		<!--End of pull to Refresher-->
+		<div class="card margin-md" ng-repeat="order in orders.completed.list" ng-click="orders.viewOrder(order)">
 
-		<div class="card" ng-repeat="order in orders.list" ng-click="orders.viewOrder(order.order_id)">
-
-			<div class="item">
+			<div class="item padding-md">
 				<div class="row">
                     <div class="col col-80 item-text-wrap">
 					<h2>{{order.fullname}}</h2>
 					<p class="royal">{{order.items[0].itemname}}<span ng-if="order.items.length>1"> + {{order.items.length-1}} items</span></p>
 				</div>
 				<div class="col col-20 assertive" style="font-size:1.2em">
-					${{order.total_amount}}
+				${{order.total_amount}}
 				</div>
                 </div>
                 <div class="row">
