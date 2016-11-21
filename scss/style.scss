@@ -9,6 +9,7 @@ $lgx:18px;
 $xl:24px;
 $xxl:32px;
 
+
 .item-text-center
 {
     display: -webkit-box;
@@ -39,6 +40,43 @@ $xxl:32px;
   margin: 10% auto;
   transform: translateY(-10%);
 }
+
+.text-lg{
+  font-size:1.6em !important;
+}
+.text-md{
+  font-size: 16px !important;
+}
+.text-sm{
+  font-size:11px !important;
+}
+
+.line{
+    background: #999 !important;
+    height: 5px !important;
+   width: 100%;
+    position: absolute;
+    margin: 0 auto;
+    top: 50%;
+    z-index: -1;
+    left: 50%;
+   /* width: 70%;
+    position: absolute;
+    margin: 0 auto;
+    top: 24%;
+    z-index: -1;
+    left: 15%;*/
+}
+
+.positive-bg{
+  background: $positive !important;
+}
+
+.energized-bg{
+  background: $energized !important;
+}
+
+
 
 .overflow-scroll>.scroll.overscroll{
     position: fixed;
@@ -77,3 +115,18 @@ $xxl:32px;
 .margin-lg{
   margin: $lg !important;
 }
+
+
+
+
+
+
+.orderStatus { padding: 10px; overflow: hidden; }
+.orderStatus .row { padding: 0; margin: 0; display: flex; padding: 5px; width: 100%; }
+.orderStatus .row .col { display: block; flex: 1 1 0; padding: 5px; width: 100%; line-height: 12px; position: relative; text-align: center; padding-top: 15px; color: #aaa; }
+.orderStatus .row .col:before { content: ''; width: 100%; height: 5px; background: #ccc; top: 0px; left: 0; position: absolute; margin: 0 0 0 -50%; }
+.orderStatus .row .col.done:before { background: #56B500; }
+.orderStatus .row .col:first-child:before { background: none; }
+.orderStatus .row .col:after { position: absolute; width: 20px; height: 20px; content: "\f3fd"; color: #eee; font-size: 24px; line-height: 20px; background: #ccc; left: 50%; top: 0; z-index: 999; border-radius: 50%; margin: -8px 0 0 -10px; font-family: "Ionicons"; }
+.orderStatus .row .col.done:after { position: absolute; width: 20px; height: 20px; content: "\f3fd"; color: #fff; font-size: 24px; line-height: 20px; background: #56B500; left: 50%; top: 0; z-index: 999; border-radius: 50%; margin: -8px 0 0 -10px; font-family: "Ionicons"; }
+.orderStatus .row .col.done { color: #3d8f10 }

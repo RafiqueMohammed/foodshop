@@ -1,29 +1,30 @@
-<ion-view view-title="DASHBOARD" >
-	<ion-content class="no-padding" style="background-color:#eee" overflow-scroll="true">
-		<!--Refresher added for pull to refresh event-->
-		<ion-refresher
-				pulling-text="Pull to refresh..."
-				on-refresh="doRefresh()">
-		</ion-refresher>
-		<!--End of pull to Refresher-->
-		<div class="card margin-md" ng-repeat="order in orders.list" ng-click="orders.viewOrder(order)">
-
-			<div class="item padding-md">
-				<div class="row">
-                    <div class="col col-80 item-text-wrap">
-					<h2>{{order.fullname}}</h2>
-					<p class="royal">{{order.items[0].itemname}}<span ng-if="order.items.length>1"> + {{order.items.length-1}} items</span></p>
-				</div>
-				<div class="col col-20 assertive" style="font-size:1.2em">
-				${{order.total_amount}}
-				</div>
-                </div>
-                <div class="row">
-					<!--<p class="badge  badge-assertive" style="position :relative;right:0;top:0">{{order.status|lowercase}}</p>-->
-					<p class="subdued "><i class="icon ion-arrow-right-c assertive"></i> {{order.status|uppercase}}</p></div>
-			</div>
-            
-		</div>
-
-	</ion-content>
+<ion-view view-title="DASHBOARD">
+  <ion-content class="no-padding" style="background-color:#eee" overflow-scroll="true">
+    <!--Refresher added for pull to refresh event-->
+    <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
+    </ion-refresher>
+    <!--End of pull to Refresher-->
+    <div ng-if="orders.list.length>0" class="card margin-md" ng-repeat="order in orders.list" ng-click="orders.viewOrder(order)"><!-- orders.viewOrder(order) is available on app.js controller -->
+      <div class="item padding-md">
+        <div class="row">
+          <div class="col col-80 item-text-wrap">
+            <h2 class="dark">{{order.app_user.first_name | uppercase}} {{order.app_user.last_name | uppercase}}</h2>
+            <p class="royal text-md">{{order.order_item[0].products.product_name}}<span ng-if="order.order_item.length>1"> + {{order.order_item.length-1}} items</span></p>
+         <p class="royal">{{OrderType[order.dine_in -1]}}</p>
+          </div>
+          <div class="col col-20 assertive" style="font-size:1.2em">
+            {{order.currency_code}}{{order.total_price}}
+          </div>
+        </div>
+        <div class="row padding-horizontal">
+         <p class="badge" ng-class="{'badge-assertive':(order.order_status=='Pe'),'badge-royal':order.order_status=='R','badge-energized':order.order_status=='P','badge-calm':order.order_status=='Di','badge-balanced':order.order_status=='De'}" style="position :relative;right:0;top:0;">
+            {{StatusInfo[order.order_status].label|uppercase}}</p>
+        </div>
+      </div>
+    </div>
+    <div ng-if="orders.list.length==0" class="padding text-center">
+      <h1><i class="icon ion-android-sad positive"></i></h1>
+      <h4 class='dark'>NO ORDERS AVAILABLE</h4>
+    </div>
+  </ion-content>
 </ion-view>
