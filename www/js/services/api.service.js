@@ -8,35 +8,38 @@ app.factory('APIService', ['$http', 'Storage', function ($http, Storage) {
    * @return (object) response
    */
 
-  var authenticateUser = function (data, callback) {
+  var authenticateUser = function (data) {
 
-    /** FOR TESTING PURPOSE 
+    /** FOR TESTING PURPOSE
     response={};
     response.islogged = true;
     Storage.save(SESS_USER, response, true);
     callback(true, "Authentication successfull");
     return;*/
 
-    $http.post(LOGIN_URL, data).then(function (response) {
-      //successfully executed
-      if (response.data) {
-        response.data.islogged = true;
-        Storage.save(SESS_USER, response.data, true);
-        callback(true, "Authentication successfull");
-      } else {
-        callback(false, "Invalid Response");
-      }
+    return new Promise(function (resolve, reject) {
+      $http.post(LOGIN_URL, data).then(function (response) {
+        //successfully executed
+        if (response.data) {
+          response.data.islogged = true;
+          Storage.save(SESS_USER, response.data, true);
+          resolve();
+        } else {
+          reject("Invalid Response");
+        }
 
-    }, function (response) {
-      //error on request
-      if (response.data.error.code == ERR_LOGIN_FAILED) {
-        callback(false, "Username/Password is invalid");
-      } else {
-        callback(false, "Server is not responding");
-      }
+      }, function (response) {
+        //error on request
+        if (response.data.error.code == ERR_LOGIN_FAILED) {
+          reject("Username/Password is invalid");
+        } else {
+          reject("Server is not responding");
+        }
 
 
+      });
     });
+
   }
 
 
@@ -47,31 +50,25 @@ app.factory('APIService', ['$http', 'Storage', function ($http, Storage) {
         page = 1;
       }
       var _orders = [];
-      if (User.islogged) {
-        var data = {};
-        data.restaurant_id = User.userId;
-        data.access_token = User.id;
-        data.limit = 20;
-        data.page = page;
-        $http.post(ORDERS_URL, data).then(function (response) {
-          //successfully executed
-          if (response.data) {
-            console.log(response.data);
-            if (response.data.length > 0) {
-              _orders = response.data;
-            }
+      var data = {};
+      data.restaurant_id = User.userId;
+      data.limit = LIST_LIMIT;
+      data.page = page;
+      $http.post(ORDERS_URL, data).then(function (response) {
+        //successfully executed
+        if (response.data) {
+          console.log(response.data);
+          if (response.data.length > 0) {
+            _orders = response.data;
           }
-          resolve(_orders); //returns orders data if available or returns empty
+        }
+        resolve(_orders); //returns orders data if available or returns empty
 
-        }, function (response) {
-          resolve(_orders); //returns empty data
-        });
-      } else {
-        resolve(_orders);
-      }
+      }, function (response) {
+        resolve(_orders); //returns empty data
+      });
+
     });
-
-
 
   }
   var getCompletedOrders = function (page) {
@@ -81,29 +78,25 @@ app.factory('APIService', ['$http', 'Storage', function ($http, Storage) {
         page = 1;
       }
       var _orders = [];
-      if (User.islogged) {
-        var data = {};
-        data.restaurant_id = User.userId;
-        data.access_token = User.id;
-        data.limit = 20;
-        data.completed_order = "1";
-        data.page = page;
-        $http.post(ORDERS_URL, data).then(function (response) {
-          //successfully executed
-          if (response.data) {
-            console.log(response.data);
-            if (response.data.length > 0) {
-              _orders = response.data;
-            }
+      var data = {};
+      data.restaurant_id = User.userId;
+      data.limit = LIST_LIMIT;
+      data.completed_order = "1";
+      data.page = page;
+      $http.post(ORDERS_URL, data).then(function (response) {
+        //successfully executed
+        if (response.data) {
+          console.log(response.data);
+          if (response.data.length > 0) {
+            _orders = response.data;
           }
-          resolve(_orders); //returns orders data if available or returns empty
+        }
+        resolve(_orders); //returns orders data if available or returns empty
 
-        }, function (response) {
-          resolve(_orders); //returns empty data
-        });
-      } else {
-        resolve(_orders);
-      }
+      }, function (response) {
+        resolve(_orders); //returns empty data
+      });
+
     });
 
 
@@ -111,102 +104,160 @@ app.factory('APIService', ['$http', 'Storage', function ($http, Storage) {
   }
 
 
-  var resetPassword = function (data, callback) {
+  var sendOTP = function (data) {
 
-    $http.post(RESET_PASSWORD_URL, data).then(function (response) {
-      //successfully executed
-      if (response.data) {
-        callback(true, "Reset successfull");
-      } else {
-        callback(false, "Invalid Response");
-      }
+    return new Promise(function (resolve, reject) {
+      $http.post(SEND_RESET_OTP_URL, data).then(function (response) {
+        //successfully executed
+        if (response.data) {
+          resolve("Please check your email and verify OTP code");
+        } else {
+          reject("Invalid Response");
+        }
 
-    }, function (response) {
-      //error on request
-      if (response.data.error) {
-        callback(false, response.data.error.message);
-      } else {
-        callback(false, "Server is not responding");
-      }
+      }, function (response) {
+        //error on request
+        if (response.data.error) {
+          reject(response.data.error.message);
+        } else {
+          reject("Server is not responding");
+        }
 
 
+      });
     });
+
   }
+
+var verifyOTP=function(data){
+    return new Promise(function (resolve, reject) {
+      $http.post(OTP_VERIFY_URL, data).then(function (response) {
+        //successfully executed
+        if (response.data) {
+          response.data.islogged = true;
+          Storage.save(SESS_USER, response.data, true);
+          resolve("OTP verified successfully");
+        } else {
+          reject("Invalid Response");
+        }
+
+      }, function (response) {
+        //error on request
+        if (response.data.error) {
+          reject(response.data.error.message);
+        } else {
+          reject("Server is not responding");
+        }
+
+
+      });
+    });
+}
+
+var updateProfile=function(data){
+    return new Promise(function (resolve, reject) {
+      var _u = Storage.get(SESS_USER, true);
+      $http.put(UPDATE_USER_URL+"/"+_u.userId+"?access_token="+_u.id, data).then(function (response) {
+        //successfully executed
+        if (response.data) {
+          resolve("Password reset successful");
+        } else {
+          reject("Invalid Response");
+        }
+
+      }, function (response) {
+        //error on request
+        if (response.data.error) {
+          reject(response.data.error.message);
+        } else {
+          reject("Server is not responding");
+        }
+
+
+      });
+    });
+}
 
   var acceptOrder = function (data, min) {
+
+    var _setTime = function (data, cb, err) {
+      data.duration = min;
+      $http.post(ORDER_SET_TIME, data).then(function (response) {
+        //successfully executed
+        if (response.data) {
+          cb();
+        } else {
+          err("Order accepted but unable to set time");
+        }
+
+      }, function (response) {
+        err("Invalid response from server");
+
+      });
+    }
+
     return new Promise(function (resolve, reject) {
-      if (User.islogged) {
-        data.access_token = User.id;
-        $http.post(ORDER_STATUS, data).then(function (response) {
-          //successfully executed
-          if (response.data) {
-            resolve();
-          } else {
-            reject("Unable to accept order. Please try again later");
-          }
 
-        }, function (response) {
-          reject("Invalid response from server");
+      $http.post(ORDER_STATUS, data).then(function (response) {
+        //successfully executed
+        if (response.data) {
+          _setTime(data, resolve, reject);
+        } else {
+          reject("Unable to accept order. Please try again later");
+        }
 
-        });
-      } else {
-        reject("Login required");
-      }
+      }, function (response) {
+        reject("Invalid response from server");
+
+      });
+
     });
   }
   var cancelOrder = function (data) {
     return new Promise(function (resolve, reject) {
-      if (User.islogged) {
-        data.access_token = User.id;
-        $http.post(ORDER_STATUS, data).then(function (response) {
-          //successfully executed
-          if (response.data) {
-            if (response.data.data.count == 1) {
-              resolve();
-            } else {
-              reject("#167 Unable to cancel order. Please try again later");
-            }
-
+      $http.post(ORDER_STATUS, data).then(function (response) {
+        //successfully executed
+        if (response.data) {
+          if (response.data.data.count == 1) {
+            resolve();
           } else {
-            reject("#171 fUnable to cancel order. Please try again later");
+            reject("#167 Unable to cancel order. Please try again later");
           }
 
-        }, function (response) {
-          reject("Invalid response from server");
+        } else {
+          reject("#171 fUnable to cancel order. Please try again later");
+        }
 
-        });
-      } else {
-        reject("Login required");
-      }
+      }, function (response) {
+        reject("Invalid response from server");
+
+      });
+
     });
   }
 
   var setOrderStatus = function (order) {
     return new Promise(function (resolve, reject) {
-      if (User.islogged) {
-        var _nextStatus = getNextStatus(order.order_status);
-        console.log(_nextStatus, "Next Status");
 
-        var data = {};
-        data.access_token = User.id;
-        data.id = order.id;
-        data.status = _nextStatus;
+      var _nextStatus = getNextStatus(order.order_status,order.dine_in);
+      console.log(_nextStatus, "Next Status");
+      var data = {};
+      data.id = order.id;
+      data.status = _nextStatus;
 
-        $http.post(ORDER_STATUS, data).then(function (response) {
-          if (response.data) {
-            order.order_status = _nextStatus;
-            resolve(order);
-          } else {
-            reject("Unable to set status. Please try again");
-          }
+      $http.post(ORDER_STATUS, data).then(function (response) {
+        if (response.data) {
+          order.order_status = _nextStatus;
+          resolve(order);
+        } else {
+          reject("Unable to set status. Please try again");
+        }
 
-        }, function (response) {
-          reject("Invalid response from server");
+      }, function (response) {
+        reject("Invalid response from server");
 
-        });
-      } else {
-        reject("Login required");
-      }
+      });
+
     });
   }
 
@@ -227,7 +278,9 @@ app.factory('APIService', ['$http', 'Storage', function ($http, Storage) {
     },
     getCompletedOrders: getCompletedOrders,
     login: authenticateUser,
-    resetPassword: resetPassword,
+    sendOTP: sendOTP,
+    verifyOTP:verifyOTP,
+    updateProfile: updateProfile,
     acceptOrder: acceptOrder,
     cancelOrder: cancelOrder,
     setOrderStatus: setOrderStatus

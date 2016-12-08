@@ -1,28 +1,37 @@
 <ion-view view-title="{{order.app_user.first_name|uppercase}}'S ORDER">
 	<ion-content class="padding" style="background-color:#eee">
-        
+
         <ion-list>
             <ion-item ng-repeat="item in order.order_item">
-                <div class="row">
+                <!-- NORMAL PRODUCT -->
+                <div class="row" ng-if="item.product_id!=0">
                     <div class="col col-20" style=""><span class="padding-md" style="border:#eee 1px solid; vertical-align:-webkit-baseline-middle">{{item.no_of_items}}</span></div>
-                    <div class="col col-60">{{item.products.product_name}}
-                       <p>{{item.products.product_name}}</p>
-                    </div>
+                    <div class="col col-60">{{item.products.product_name}}              </div>
                     <div class="col col-20 text-center">{{order.currency_code}}{{item.item_price}}</div>
                 </div>
+
+                <!-- PROMOTIONAL PRODUCT -->
+                <div class="row" ng-if="item.product_id==0">
+                    <div class="col col-20" style=""><span class="padding-md" style="border:#eee 1px solid; vertical-align:-webkit-baseline-middle">{{item.no_of_items}}</span></div>
+                    <div class="col col-60">{{item.promotions.promotion_name}}</div>
+                    <div class="col col-20 text-center">{{order.currency_code}}{{item.promotions.price}}</div>
+                </div>
+
                <!-- <div class="badge assertive">${{item.amount}}</div>
                 <h2>{{item.itemname}}</h2>
                 <p> {{item.qty}}</p>-->
-                
+
             </ion-item>
+						<div ng-if="order.note.trim().length>0" class="royal text-sm">NOTE : {{order.note |uppercase}}</div>
         </ion-list>
+
 <div class="padding-vertical">
 <div class="row">
     <div class="col col-50"> <button class="button button-positive button-block" ng-click="confirmOrder()">ACCEPT</button></div>
     <div class="col col-50"> <button class="button button-assertive  button-block" ng-click="confirmReject()">REJECT</button></div>
 </div>
-       
-        
+
+
     </div>
 	</ion-content>
 </ion-view>

@@ -7,11 +7,11 @@
 			<ion-list>
 				<label class="item item-input" >
 					<i class="icon ion-person placeholder-icon"></i>
-    <input type="text" ng-model="user.username" placeholder="Enter your username">
+    <input type="text" ng-model="user.username" placeholder="Enter your username" ng-enter="login()">
   </label>
 				<label class="item item-input">
 					<i class="icon ion-key placeholder-icon"></i>
-    <input type="password" ng-model="user.password" placeholder="Password">
+    <input type="password" ng-model="user.password" placeholder="Password" ng-enter="login()">
   </label>
 
 			</ion-list>

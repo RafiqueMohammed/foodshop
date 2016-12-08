@@ -1,28 +1,52 @@
 <ion-view view-title="ORDER STATUS">
-	<ion-content style="background-color:#eee">
-		<div class="padding" style="background-color:#fff">
-			<h4 class="assertive">{{order.app_user.first_name|uppercase}} {{order.app_user.last_name|uppercase}}</h4>
-			<p>{{order.delivery_address}}</p>
-			<ul class="dark">
-				<li ng-repeat="item in order.order_item"><i class="icon ion-android-done"></i> {{item.products.product_name}}</li>
-			</ul>
-		</div>
-	<div class="orderStatus" style="margin-top:35px;margin-bottom:35px">
-  <ul class="row">
-	  
-    <li class="col" ng-class="{'done':order.order_status=='R'||order.order_status=='P'||order.order_status=='Di'||order.order_status=='De'}" >Accepted</li>
-    <li class="col" ng-class="{'done':order.order_status=='P'||order.order_status=='Di'||order.order_status=='De'}" >InProcess</li>
-    <li class="col" ng-class="{'done':order.order_status=='Di'||order.order_status=='De'}" >Dispatched</li>
-    <li class="col" ng-class="{'done':order.order_status=='De'}" >Delivered</li>
-    
-  </ul>
-</div>
-		<div class="padding" ng-if="order.order_status!='De'">
-			<button class="button button-royal button-block" ng-click="setStatus()"><i class="icon ion-android-done-all"></i> SET AND SEND NOTIFICATION</button>
-		</div>
+  <ion-content style="background-color:#eee">
+    <div class="padding" style="background-color:#fff">
+      <h5 class="assertive">CUSTOMER INFORMATION</h5>
+      <h4 class="dark">{{order.app_user.first_name|uppercase}} {{order.app_user.last_name|uppercase}}</h4>
+      <p class="dark" style="text-transform:uppercase">{{order.delivery_address}}</p>
+    </div>
+    <div class="padding margin-top-md" style="background-color:#fff;border:1px dashed #ccc;">
+      <h5 class="assertive">ORDER INFORMATION</h5>
+      <h4 class="royal">ORDER #{{order.id}} </h4>
+      <h5 class="royal text-right"> TOTAL AMOUNT : <span class="badge badge-balanced">{{order.currency_code}} {{order.total_price}}</span></h5>
+      <ul class="dark list">
+        <li class="royal item-divider text-center" ng-if="order.dine_in=='1'"><span class="energized">DINE IN ON {{dine_date}} ON {{dine_time}}
+        </span></li>
 
+        <!-- NORMAL PRODUCT -->
+        <li ng-repeat="item in order.order_item" class="item" style="font-size:16px" ng-if="item.product_id!=0">
+          <i class="icon ion-android-done balanced"></i> {{item.products.product_name}} <span class="badge badge-assertive">{{item.no_of_items}}</span>
+        </li>
 
-
-
-	</ion-content>
+        <!-- PROMOTIONAL PRODUCT -->
+        <li ng-repeat="item in order.order_item" class="item" style="font-size:16px" ng-if="item.product_id==0">
+          <i class="icon ion-android-done balanced"></i> {{item.promotions.promotion_name}} <span class="badge badge-assertive">{{item.no_of_items}}</span>
+        </li>
+      
+      </ul>
+      <div ng-if="order.note!=''" class="royal text-sm">NOTE : {{order.note |uppercase}}</div>
+    </div>
+    <div class="orderStatus" style="margin-top:20px;margin-bottom:35px">
+      <ul class="row" ng-if="order.dine_in=='1'">
+        <li class="col text-sm done">ACCEPTED</li>
+        <li class="col text-sm" ng-class="{'done':order.order_status=='BO'||order.order_status=='DE'}">RESERVED</li>
+        <li class="col text-sm" ng-class="{'done':order.order_status=='DE'}">COMPLETED</li>
+      </ul>
+      <ul class="row" ng-if="order.dine_in=='2'">
+        <li class="col text-sm done">ACCEPTED</li>
+        <li class="col text-sm" ng-class="{'done':order.order_status=='P'||order.order_status=='DI'||order.order_status=='DE'}">INPROCESS</li>
+        <li class="col text-sm" ng-class="{'done':order.order_status=='RP'||order.order_status=='DE'}">READY FOR PICKUP</li>
+        <li class="col text-sm" ng-class="{'done':order.order_status=='DE'}">PICKED</li>
+      </ul>
+      <ul class="row" ng-if="order.dine_in=='3'">
+        <li class="col text-sm done">ACCEPTED</li>
+        <li class="col text-sm" ng-class="{'done':order.order_status=='P'||order.order_status=='DI'||order.order_status=='DE'}">INPROCESS</li>
+        <li class="col text-sm" ng-class="{'done':order.order_status=='DI'||order.order_status=='DE'}">DISPATCHED</li>
+        <li class="col text-sm" ng-class="{'done':order.order_status=='DE'}">DELIVERED</li>
+      </ul>
+    </div>
+  </ion-content>
+  <div class="bar bar-footer bar-royal" ng-if="order.order_status!='DE'" ng-click="setStatus()">
+    <div class="title"> <i class="icon ion-android-done-all"></i> SET AND SEND NOTIFICATION </div>
+  </div>
 </ion-view>

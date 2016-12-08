@@ -7,6 +7,7 @@ var app = angular.module('starter', ['ionic']);
 var User = USER_INFO;
 
 
+
 app.run(['$ionicPlatform', '$rootScope', 'Storage', '$location', '$ionicActionSheet', '$timeout', '$state', '$ionicLoading', function ($ionicPlatform, $rootScope, Storage, $location, $ionicActionSheet, $timeout, $state, $ionicLoading) {
   $ionicPlatform.ready(function () {
     if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -109,7 +110,7 @@ app.run(['$ionicPlatform', '$rootScope', 'Storage', '$location', '$ionicActionSh
 
   $rootScope.$on('orders.order.updated', function (e, param) {
     if ($rootScope.orders.list[param.index]) {
-      if ($rootScope.orders.list[param.index].order_status == ORDER_DELIVERED||$rootScope.orders.list[param.index].order_status == ORDER_REJECT) {
+      if ($rootScope.orders.list[param.index].order_status == ORDER_DELIVERED || $rootScope.orders.list[param.index].order_status == ORDER_REJECT) {
         $rootScope.orders.list.splice(param.index, 1);
         console.log("updateOrdersList");
       }
@@ -118,7 +119,7 @@ app.run(['$ionicPlatform', '$rootScope', 'Storage', '$location', '$ionicActionSh
 
 }])
 
-app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', '$provide', '$httpProvider', function ($stateProvider, $urlRouterProvider, $provide, $httpProvider) {
 
   $stateProvider
     .state('base', {
@@ -181,17 +182,48 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
 
   $urlRouterProvider.otherwise('/dashboard');
 
+  // Intercept http calls.
+  $provide.factory('MyHttpInterceptor', ['$q', '$injector', 'Storage', function ($q, $injector, Storage) {
+    return {
+      // On request 
+      request: function (config) {
+       
+        if (User.islogged) {
+          config.headers['X-Access-Token'] = User.id;
+        }
+        return config;
+      },
+      // On response success
+      response: function (response) {
+        // Return the response or promise.
+        return response || $q.when(response);
+      },
 
+      // On response failture
+      responseError: function (rejection) {
+        console.log(rejection, "rejection"); // Contains the data about the error.
+        if (rejection.status == 401) {
+          Storage.remove(SESS_USER);
+          $injector.get('$state').transitionTo("login");
+        }
+        // Return the promise rejection.
+        return $q.reject(rejection);
+      }
+    };
+  }]);
+
+  // Add the interceptor to the $httpProvider.
+  $httpProvider.interceptors.push('MyHttpInterceptor');
 
 }]);
 
 app.controller('indexCtrl', ['$scope', '$rootScope', '$state', function ($scope, $rootScope, $state) {
 
 
-/**
- * @Author Bhupendra
- * @desc This function is called by Refresh button in header bar. Based on the current page the refresh will be executed
- */
+  /**
+   * @Author Bhupendra
+   * @desc This function is called by Refresh button in header bar. Based on the current page the refresh will be executed
+   */
   $scope.doRefresh = function () {
 
     if ($state.current.name == 'base.completed') {

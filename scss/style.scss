@@ -88,7 +88,7 @@ $xxl:32px;
 }
 
 .no-padding {
-    padding: 0px !important;
+    padding: 0 !important;
 }
 .padding-sm{
   padding: $sm !important;
@@ -101,6 +101,9 @@ $xxl:32px;
   padding: $lg !important;
 }
 
+.no-margin {
+    margin: 0 !important;
+}
 .margin-sm{
   margin: $sm !important;
 }
@@ -115,7 +118,9 @@ $xxl:32px;
 .margin-lg{
   margin: $lg !important;
 }
-
+.margin-top-md{
+  margin-top: $md !important;
+}
 
 
 

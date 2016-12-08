@@ -1,14 +1,14 @@
-/** 
+/**
  * AUTHOR : Bhupendra
  * STATE : vieworder
  * PATH : /dashboard/viewOrder
- * ABOUT CONTROLLER : 
+ * ABOUT CONTROLLER :
  * This controller is to view pending order. User can Accept or Reject the order in this page
- * 
+ *
  * */
 
 app.controller('orderCtrl', ['$scope', '$rootScope', 'APIService', '$location', '$stateParams', '$state', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'Storage',
-  function ($scope, $rootScope, APIService, $location, $stateParams, $state, $ionicPopup, $ionicModal, $ionicActionSheet, Storage) {
+  function($scope, $rootScope, APIService, $location, $stateParams, $state, $ionicPopup, $ionicModal, $ionicActionSheet, Storage) {
 
 
 
@@ -16,7 +16,7 @@ app.controller('orderCtrl', ['$scope', '$rootScope', 'APIService', '$location', 
     $scope.user = Storage.get(SESS_USER, true);
     User = Storage.get(SESS_USER, true);
 
-    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+    $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
       viewData.enableBack = true;
       if (!User.islogged) {
         $location.path('/login');
@@ -24,70 +24,69 @@ app.controller('orderCtrl', ['$scope', '$rootScope', 'APIService', '$location', 
     });
 
     $scope.order = {};
-
     $scope.confirm = {};
-    $scope.confirm.time = function (val) {
+    $scope.confirm.time = function(val) {
       console.log("confirm ", val);
     }
 
     $ionicModal.fromTemplateUrl('templates/time-modal.html', {
       scope: $scope
-    }).then(function (modal) {
+    }).then(function(modal) {
       $scope.selectTime = modal;
     });
 
-    var setReadyTime = function (min) {
+    var setReadyTime = function(min) {
 
       $rootScope.showLoading(true, "Accepting order..");
       APIService.acceptOrder({
         id: $scope.order.id,
         status: ORDER_ACCEPT
-      }, min).then(function (res) {
+      }, min).then(function(res) {
         $rootScope.showLoading(false);
         $scope.order.order_status = ORDER_ACCEPT;
-        
-        angular.forEach($rootScope.orders.list, function (value, key) {
-                console.log(key + ': ' + value);
-                if (value.id == order.id) {
-                  $rootScope.orders.list[key] = order;
-                  $rootScope.$broadcast('orders.order.updated', {
-                    index: key
-                  });
-                  return;
-                }
-              });
+
+        angular.forEach($rootScope.orders.list, function(value, key) {
+
+          if (value.id == $scope.order.id) {
+            $rootScope.orders.list[key] = $scope.order;
+            $rootScope.$broadcast('orders.order.updated', {
+              index: key
+            });
+            return;
+          }
+        });
         $state.go("order_details", {
           order: JSON.stringify($scope.order)
         });
-      }).catch(function (err) {
+      }, function(err) {
         $rootScope.showLoading(false);
         $ionicPopup.alert({
           template: err
         });
       });
     };
-    $scope.confirmOrder = function () {
+    $scope.confirmOrder = function() {
       $ionicPopup.show({
         title: 'ORDER READY IN',
         scope: $scope,
         buttons: [{
           text: '30 MINS',
           type: 'button-stable',
-          onTap: function (e) {
+          onTap: function(e) {
             setReadyTime("30");
 
           }
         }, {
           text: '45 MINS',
           type: 'button-stable',
-          onTap: function (e) {
+          onTap: function(e) {
             setReadyTime("45");
 
           }
         }, {
           text: '60 MINS',
           type: 'button-stable',
-          onTap: function (e) {
+          onTap: function(e) {
             setReadyTime("60");
 
           }
@@ -97,26 +96,26 @@ app.controller('orderCtrl', ['$scope', '$rootScope', 'APIService', '$location', 
 
 
 
-    $scope.confirmReject = function () {
+    $scope.confirmReject = function() {
       var confirmPopup = $ionicPopup.confirm({
         title: 'CANCEL ORDER',
         template: 'Are you sure you want to cancel this order?'
       });
 
-      confirmPopup.then(function (res) {
+      confirmPopup.then(function(res) {
         if (res) {
           APIService.cancelOrder({
             id: $scope.order.id,
             status: ORDER_REJECT
-          }).then(function (res) {
+          }).then(function(res) {
 
-            angular.forEach($rootScope.orders.list, function (value, key) {
+            angular.forEach($rootScope.orders.list, function(value, key) {
 
               if (value.id == $scope.order.id) {
                 $rootScope.orders.list.splice(key, 1);
                 $ionicPopup.alert({
                   template: 'Order has been cancelled'
-                }).then(function () {
+                }).then(function() {
                   $location.path('/dashboard');
                 });
 
@@ -126,10 +125,10 @@ app.controller('orderCtrl', ['$scope', '$rootScope', 'APIService', '$location', 
 
 
 
-          }).catch(function (err) {
+          }, function(err) {
             $ionicPopup.alert({
               template: err
-            }).then(function () {
+            }).then(function() {
               $location.path('/dashboard');
             });
           });
@@ -143,20 +142,21 @@ app.controller('orderCtrl', ['$scope', '$rootScope', 'APIService', '$location', 
   }
 ]);
 
-/** 
+/**
  * AUTHOR : Bhupendra
  * STATE : order_details
  * PATH : /dashboard/order_details
- * ABOUT CONTROLLER : 
+ * ABOUT CONTROLLER :
  * This controller is for Order Summary where user can set and send notification to change order status
  * */
 
-app.controller('orderStatusCtrl', ['$scope', '$rootScope', 'APIService', '$location', '$stateParams', '$state', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'Storage', 
-  function ($scope, $rootScope, APIService, $location, $stateParams, $state, $ionicPopup, $ionicModal, $ionicActionSheet, Storage) {
+app.controller('orderStatusCtrl', ['$scope', '$rootScope', 'APIService', '$location', '$stateParams', '$state', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'Storage',
+  function($scope, $rootScope, APIService, $location, $stateParams, $state, $ionicPopup, $ionicModal, $ionicActionSheet, Storage) {
 
     User = Storage.get(SESS_USER, true);
     $scope.order = {};
-    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+    $scope.dine_time = "";
+    $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
       viewData.enableBack = true;
       if (!User.islogged) {
         $location.path('/login');
@@ -164,11 +164,16 @@ app.controller('orderStatusCtrl', ['$scope', '$rootScope', 'APIService', '$locat
 
       if ($stateParams.order && $stateParams.order != "") {
         $scope.order = JSON.parse($stateParams.order);
+        if ($scope.order.approx_dine_in_time != "") {
+          var _dt = $scope.order.approx_dine_in_time.split("T");
+          $scope.dine_date = _dt[0];
+          $scope.dine_time = _dt[1].split(".")[0];
+        }
 
       } else {
         $ionicPopup.alert({
           template: "Required parameters is missing. Please go back and try again"
-        }).then(function () {
+        }).then(function() {
 
           $state.go("base.dashboard");
         });
@@ -176,11 +181,11 @@ app.controller('orderStatusCtrl', ['$scope', '$rootScope', 'APIService', '$locat
 
     });
 
- 
-$rootScope.$ionicGoBack = function() {
-    $state.go("base.dashboard");
-};
-    
+
+    $rootScope.$ionicGoBack = function() {
+      $state.go("base.dashboard");
+    };
+
     /* NETWORK REQUEST TO GET ORDER DETAIL
         APIService.getOrder($stateParams.order_id, function (data) {
             if (data) {
@@ -189,20 +194,20 @@ $rootScope.$ionicGoBack = function() {
             }
         });*/
 
-    $scope.setStatus = function () {
+    $scope.setStatus = function() {
       var confirmPopup = $ionicPopup.confirm({
         title: 'CONFIRM',
         template: 'Are you sure you want to change status?'
       });
 
-      confirmPopup.then(function (res) {
+      confirmPopup.then(function(res) {
         if (res) {
           $rootScope.showLoading(true, "Changing orders status");
-          APIService.setOrderStatus($scope.order).then(function (order) {
+          APIService.setOrderStatus($scope.order).then(function(order) {
 
-            $scope.$apply(function () {
+            $scope.$apply(function() {
               $scope.order = order;
-              angular.forEach($rootScope.orders.list, function (value, key) {
+              angular.forEach($rootScope.orders.list, function(value, key) {
                 console.log(key + ': ' + value);
                 if (value.id == order.id) {
                   $rootScope.orders.list[key] = order;
@@ -215,6 +220,10 @@ $rootScope.$ionicGoBack = function() {
             });
             console.log(order, "order CB");
             $rootScope.showLoading(false);
+          }, function(err) {
+            $ionicPopup.alert({
+              template: err
+            })
           });
         }
       });
